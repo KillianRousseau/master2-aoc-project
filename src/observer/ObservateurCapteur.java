@@ -1,6 +1,8 @@
 package observer;
 
+import java.util.concurrent.Future;
+
 public interface ObservateurCapteur{
 	
-	public void update(Capteur generateur);
+	public Future update(Capteur generateur);
 }

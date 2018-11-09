@@ -3,6 +3,7 @@ package observer;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -45,12 +46,19 @@ public class Afficheur extends JFrame implements ObservateurCapteur{
 	}
 	
 	@Override
-	public void update(Capteur capteur) {
+	public Future<Integer> update(Capteur capteur) {
 		if(this.canal != null) {
-			//Future f = this.canal.getValue();
-			//this.val = f.get().toString();
-			//this.label.setText(this.val);
+			Future<Integer> f = this.canal.getValue();
+			try {
+				this.val = f.get().toString();
+				this.label.setText(this.val);
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
+			return f;
 		}
+		return null;
+		
 	}
 	
 	public void setCanal(Canal c) {

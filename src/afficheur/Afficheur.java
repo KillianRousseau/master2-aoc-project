@@ -1,4 +1,4 @@
-package observer;
+package afficheur;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import proxy.Canal;
+import proxy.ObservateurCapteur;
 
 public class Afficheur extends JFrame implements ObservateurCapteur{
 
@@ -31,7 +32,7 @@ public class Afficheur extends JFrame implements ObservateurCapteur{
 		
 		setTitle("Afficheur");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    setPreferredSize(new Dimension(600, 400));
+	    setPreferredSize(new Dimension(500, 400));
 	    setLocation(locationX, locationY);
 	    
 	    this.setLayout(new GridBagLayout());
@@ -46,7 +47,7 @@ public class Afficheur extends JFrame implements ObservateurCapteur{
 	}
 	
 	@Override
-	public Future<Integer> update(Capteur capteur) {
+	public Future<Integer> update(CapteurAsync capteur) {
 		if(this.canal != null) {
 			Future<Integer> f = this.canal.getValue();
 			try {

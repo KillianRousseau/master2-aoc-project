@@ -2,12 +2,13 @@ package callable;
 
 import java.util.concurrent.Callable;
 
-import observer.Capteur;
+import capteur.Capteur;
+import proxy.ObservateurCapteur;
 
 public class GetValue<V> implements Callable<V>{
 
-	public GetValue(Capteur capteur) {
-
+	public GetValue(Capteur capteur, ObservateurCapteur observateur) {
+		
 	}
 
 	@Override

@@ -2,14 +2,15 @@ package callable;
 
 import java.util.concurrent.Callable;
 
-import observer.Capteur;
+import afficheur.CapteurAsync;
+import capteur.Capteur;
 
 public class Update<V> implements Callable<V>{
 
-	private Capteur generateur;
+	private CapteurAsync capteurAsync;
 	
-	public Update(Capteur generateur) {
-		this.generateur = generateur;
+	public Update(CapteurAsync capteurAsync) {
+		this.capteurAsync = capteurAsync;
 	}
 	@Override
 	public V call() {

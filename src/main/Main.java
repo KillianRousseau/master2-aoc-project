@@ -11,6 +11,7 @@ import capteur.CapteurImpl;
 import proxy.Canal;
 import strategy.AlgoDiffusion;
 import strategy.DiffusionAtomique;
+import strategy.DiffusionSequentielle;
 
 public class Main {
 

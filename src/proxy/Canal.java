@@ -30,14 +30,14 @@ public class Canal implements CapteurAsync, ObservateurCapteurAsync{
 	@Override
 	public Future<Object> update(Capteur capteur) {
 		Update<Integer> update = new Update<Integer>(this);
-		return scheduler.schedule(update, (long)(Math.random()*500L), TimeUnit.MILLISECONDS);
+		return scheduler.schedule(update, (long)(Math.random()*600L+100L), TimeUnit.MILLISECONDS);
 	}
 
 	@Override
 	public Future<Integer> getValue() {
 		GetValue<Integer> getValue = new GetValue<Integer>(this.capteur);
 		
-		return scheduler.schedule(getValue, (long)(Math.random()*500L), TimeUnit.MILLISECONDS);
+		return scheduler.schedule(getValue, (long)(Math.random()*600L+100L), TimeUnit.MILLISECONDS);
 	}
 	
 	@Override

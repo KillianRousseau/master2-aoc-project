@@ -3,24 +3,26 @@ package afficheur;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import proxy.Canal;
-import proxy.ObservateurCapteur;
+import proxy.CapteurAsync;
 
 public class Afficheur extends JFrame implements ObservateurCapteur{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8822264027392620676L;
 	private Canal canal;
 	private String val;
 	private JPanel panel;
 	private JLabel label;
+	private Future<Integer> future;
 	
 	public Afficheur(int locationX, int locationY) {
 		this(null, locationX, locationY);
@@ -28,7 +30,7 @@ public class Afficheur extends JFrame implements ObservateurCapteur{
 	
 	public Afficheur(Canal canal, int locationX,int locationY) {
 		this.canal = canal;
-		this.val = "";
+		this.val = "0";
 		
 		setTitle("Afficheur");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,19 +49,10 @@ public class Afficheur extends JFrame implements ObservateurCapteur{
 	}
 	
 	@Override
-	public Future<Integer> update(CapteurAsync capteur) {
+	public synchronized void update(CapteurAsync capteur) {
 		if(this.canal != null) {
-			Future<Integer> f = this.canal.getValue();
-			try {
-				this.val = f.get().toString();
-				this.label.setText(this.val);
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-			}
-			return f;
+			this.future = this.canal.getValue();
 		}
-		return null;
-		
 	}
 	
 	public void setCanal(Canal c) {
@@ -68,6 +61,19 @@ public class Afficheur extends JFrame implements ObservateurCapteur{
 	
 	public Canal getCanal() {
 		return this.canal;
+	}
+
+	public synchronized void setVal(String val) {
+		this.val = val;
+		this.label.setText(this.val);
+	}
+
+	public synchronized Future<Integer> getFuture() {
+		return future;
+	}
+
+	public synchronized void setFuture(Future<Integer> future) {
+		this.future = future;
 	}
 
 }

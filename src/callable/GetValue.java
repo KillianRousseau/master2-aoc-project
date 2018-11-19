@@ -3,18 +3,19 @@ package callable;
 import java.util.concurrent.Callable;
 
 import capteur.Capteur;
-import proxy.ObservateurCapteur;
 
-public class GetValue<V> implements Callable<V>{
+public class GetValue<V> implements Callable<Integer>{
 
-	public GetValue(Capteur capteur, ObservateurCapteur observateur) {
-		
+	private Capteur capteur;
+	
+	public GetValue(Capteur capteur) {
+		this.capteur = capteur;
 	}
 
 	@Override
-	public V call() {
-
-		return null;
+	public Integer call() {
+		Integer val = this.capteur.getValue();
+		return val;
 	}
 
 }

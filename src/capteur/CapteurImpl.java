@@ -3,8 +3,6 @@ package capteur;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,7 +16,7 @@ public class CapteurImpl extends JFrame implements Capteur{
 	 * 
 	 */
 	private static final long serialVersionUID = -2095705696902692910L;
-	private int value;
+	private int currentValue;
 	private long time;
 	private JPanel panel;
 	private JLabel label;
@@ -26,6 +24,7 @@ public class CapteurImpl extends JFrame implements Capteur{
 	private AlgoDiffusion algoDiffusion;
 		
 	public CapteurImpl(int locationX, int locationY) {
+		this.time = 1000;
 		
 		setTitle("Générateur");
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,7 +33,7 @@ public class CapteurImpl extends JFrame implements Capteur{
 	    
 	    this.setLayout(new GridBagLayout());
 	    this.panel = new JPanel();
-	    this.label = new JLabel(""+value);
+	    this.label = new JLabel(""+currentValue);
 	    this.label.setFont(new Font("Courier New", Font.BOLD, 60));
 	    this.panel.add(this.label);
 	    this.add(this.panel);
@@ -43,14 +42,12 @@ public class CapteurImpl extends JFrame implements Capteur{
 	}
 
 	@Override
-	public int getValue() {
-		return value;
+	public Integer getValue() {
+		return this.algoDiffusion.getValue();
 	}
 	
-	public void setValue(int value) {
-		this.value = value;
-	}
 	
+	@Override
 	public void setAlgoDiffusion(AlgoDiffusion algoDiffusion) {
 		this.algoDiffusion = algoDiffusion;
 	}
@@ -60,13 +57,25 @@ public class CapteurImpl extends JFrame implements Capteur{
 		while (true) {
 			try {
 				Thread.sleep(time);
+				setCurrentValue(++this.currentValue);
+				if(this.algoDiffusion!= null) {
+					this.algoDiffusion.execute();
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			setValue(getValue()+1);
-			if(this.algoDiffusion!= null) {
-				this.algoDiffusion.execute();
-			}
 		}
+	}
+	
+	
+	// ACCESSEURS 
+	
+	public int getCurrentValue() {
+		return this.currentValue;
+	}
+	
+	public void setCurrentValue(int currentValue) {
+		this.currentValue = currentValue;
+		this.label.setText(currentValue+"");
 	}
 }

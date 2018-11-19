@@ -6,6 +6,6 @@ import capteur.Capteur;
 
 public interface ObservateurCapteurAsync {
 
-	public Future<Integer> update(Capteur generateur);
+	public Future<Object> update(Capteur capteur);
 
 }

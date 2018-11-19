@@ -1,8 +1,14 @@
 package strategy;
 
-public interface AlgoDiffusion {
+import proxy.ObservateurCapteurAsync;
 
-	public void configure();
+public interface AlgoDiffusion {
 	
 	public void execute();
+	
+	public void attach(ObservateurCapteurAsync observateur);
+	
+	public void detach(ObservateurCapteurAsync observateur);
+	
+	public Integer getValue();
 }

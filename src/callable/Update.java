@@ -2,18 +2,19 @@ package callable;
 
 import java.util.concurrent.Callable;
 
-import afficheur.CapteurAsync;
-import capteur.Capteur;
+import proxy.CapteurAsync;
 
-public class Update<V> implements Callable<V>{
+public class Update<V> implements Callable<Object>{
 
 	private CapteurAsync capteurAsync;
 	
 	public Update(CapteurAsync capteurAsync) {
 		this.capteurAsync = capteurAsync;
 	}
+	
 	@Override
-	public V call() {
+	public Object call() {
+		this.capteurAsync.notifyObservers();
 		return null;
 	}
 

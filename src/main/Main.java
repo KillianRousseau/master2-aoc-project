@@ -19,8 +19,19 @@ public class Main {
 
 		final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
 		Capteur capteur = new CapteurImpl(1000, 200);
-		AlgoDiffusion diffusion = new DiffusionAtomique(capteur);
-
+		AlgoDiffusion diffusion;
+		if(args.length>0) {
+			if(args[0].equals("atomique")) {
+				diffusion = new DiffusionAtomique(capteur);
+			}
+			else {
+				diffusion = new DiffusionSequentielle(capteur);
+			}
+		}
+		
+		else {		
+			diffusion = new DiffusionAtomique(capteur);
+		}
 		Canal c1 = new Canal(scheduledExecutorService);
 		Canal c2 = new Canal(scheduledExecutorService);
 		Canal c3 = new Canal(scheduledExecutorService);

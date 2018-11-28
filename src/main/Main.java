@@ -13,6 +13,10 @@ import strategy.AlgoDiffusion;
 import strategy.DiffusionAtomique;
 import strategy.DiffusionSequentielle;
 
+/**
+ * 
+ * @author Killian Rousseau, Emilien Petit
+ */
 public class Main {
 
 	public static void main(String[] args) {

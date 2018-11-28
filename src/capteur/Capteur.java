@@ -3,7 +3,8 @@ package capteur;
 import strategy.AlgoDiffusion;
 
 /**
- * L'interface capteur occupe le rôle de générateur dans le pattern Observer.
+ * L'interface Capteur occupe le rôle de générateur dans l'application.
+ * Étend l'interface Runnable pour que le Capteur soit un Thread.
  * @author Killian Rousseau, Emilien Petit
  *
  */

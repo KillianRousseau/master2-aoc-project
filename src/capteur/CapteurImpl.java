@@ -19,11 +19,30 @@ import strategy.AlgoDiffusion;
 public class CapteurImpl extends JFrame implements Capteur{
 
 	private static final long serialVersionUID = -2095705696902692910L;
+	
+	/**
+	 * Valeur actuelle du générateur de valeurs
+	 */
 	private int currentValue;
+	
+	/**
+	 * Long défini permettant de laisser une seconde de repos entre chaque valeur générée par le Thread
+	 */
 	private final long TIME = 1000;
+	
+	/**
+	 * Composant Swing pour créer une zone de contenu dans la fenêtre
+	 */
 	private JPanel panel;
+	
+	/**
+	 * Composant Swing contenant la valeur actuelle affichée par l'Afficheur
+	 */
 	private JLabel label;
 	
+	/**
+	 * Algorithme de diffusion utilisé par le générateur de valeurs
+	 */
 	private AlgoDiffusion algoDiffusion;
 	
 	/**

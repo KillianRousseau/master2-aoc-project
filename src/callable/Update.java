@@ -6,11 +6,15 @@ import proxy.CapteurAsync;
 
 /**
  * Update implémente l'interface Callable pour réaliser l'action d'update des afficheurs
+ * S'inscrit dans le rôle de Concrete MI dans le pattern ActiveObject
  * @author Killian Rousseau, Emilien Petit
  * @param <V> type de valeur retournée par le Callable update, celui-ci retourne null donc non utilisé
  */
 public class Update<V> implements Callable<Object>{
 
+	/**
+	 * CapteurAsync (Canal) servant de Subject pour notifier ses observateurs qu'il faut se mettre à jour
+	 */
 	private CapteurAsync capteurAsync;
 	
 	/**

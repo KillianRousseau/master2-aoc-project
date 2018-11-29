@@ -20,10 +20,30 @@ import proxy.CapteurAsync;
 public class Afficheur extends JFrame implements ObservateurCapteur{
 
 	private static final long serialVersionUID = -8822264027392620676L;
+	
+	/**
+	 * Canal servant de proxy lié à l'Afficheur
+	 */
 	private Canal canal;
+	
+	/**
+	 * Valeur actuelle affichée par l'Afficheur
+	 */
 	private String val;
+	
+	/**
+	 * Composant Swing pour créer une zone de contenu dans la fenêtre
+	 */
 	private JPanel panel;
+	
+	/**
+	 * Composant Swing contenant la valeur actuelle affichée par l'Afficheur
+	 */
 	private JLabel label;
+	
+	/**
+	 * Future retournant un entier contenant la nouvelle valeur à donner à l'Afficheur
+	 */
 	private Future<Integer> future;
 	
 	/**

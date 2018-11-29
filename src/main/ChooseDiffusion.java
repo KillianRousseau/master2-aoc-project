@@ -10,7 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 /**
- *
+ * Classe à exécuter possédant un main permettant de créer une interface Swing simple
+ * pour sélectionner l'algorithme de diffusion à utiliser dans l'application
  * @author Killian Rousseau, Emilien Petit 
  */
 public class ChooseDiffusion {
@@ -21,6 +22,8 @@ public class ChooseDiffusion {
 		JButton atomique = new JButton("Diffusion atomique");
 		JButton sequentielle = new JButton("Diffusion séquentielle");
 		String[] diffusion = new String[1];
+		
+		//Ajouter un listener au clic sur le bouton atomique pour lancer la classe Main avec le bon paramètre
 		atomique.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -29,6 +32,8 @@ public class ChooseDiffusion {
 				frame.setVisible(false);
 			}
 		});
+		
+		//Ajouter un listener au clic sur le bouton sequentielle pour lancer la classe Main avec le bon paramètre
 		sequentielle.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

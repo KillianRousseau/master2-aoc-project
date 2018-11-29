@@ -6,11 +6,15 @@ import capteur.Capteur;
 
 /**
  * GetValue implémente l'interface Callable pour réaliser l'action getValue et retourner une valeur entière.
+ * S'inscrit dans le rôle de Concrete MI dans le pattern ActiveObject
  * @author Killian Rousseau, Emilien Petit
  * @param <V> type de valeur retournée par le Callable GetValue, Integer suggéré.
  */
 public class GetValue<V> implements Callable<Integer>{
 
+	/**
+	 * Capteur à partir duquel récupérer la valeur
+	 */
 	private Capteur capteur;
 	
 	/**

@@ -10,7 +10,14 @@ import java.util.concurrent.Future;
  */
 public class AfficheurThread implements Runnable {
 
+	/**
+	 * Future retournant un integer, récupéré dans l'Afficheur, permettant de modifier la valeur de l'Afficheur
+	 */
 	private Future<Integer> future;
+	
+	/**
+	 * Afficheur lié au Thread
+	 */
 	private ObservateurCapteur afficheur;
 	
 	/**

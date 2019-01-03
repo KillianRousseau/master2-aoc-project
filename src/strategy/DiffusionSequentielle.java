@@ -2,8 +2,11 @@ package strategy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
-import capteur.Capteur;
+import memento.CapteurCreateur;
+import memento.CapteurMemento;
 import proxy.ObservateurCapteurAsync;
 
 /**
@@ -19,14 +22,14 @@ public class DiffusionSequentielle implements AlgoDiffusion{
 	private List<ObservateurCapteurAsync> observateurs;
 	
 	/**
-	 * Capteur générant les valeurs à récupérer par l'algorithme de diffusion
+	 * CapteurMemento utilisé pour sauvegarder un état du Capteur pendant la diffusion
 	 */
-	private Capteur capteur;
+	private CapteurMemento capteurMemento;
 	
 	/**
-	 * Valeur actuelle de l'algorithme de diffusion
+	 * CapteurCreateur qui va nous permettre de créer et de restaurer des Memento du capteur pendant la diffusion
 	 */
-	private Integer currentValue;
+	private CapteurCreateur capteurCreateur;
 	
 	/**
 	 * Compteur servant à savoir le nombre d'observateurs ayant récupéré la dernière valeur de l'algorithme de diffusion
@@ -41,13 +44,13 @@ public class DiffusionSequentielle implements AlgoDiffusion{
 	
 	/**
 	 * Constructeur de DiffusionSequentielle initialisant tous ses attributs
-	 * @param capteur : Capteur à partir duquel récupérer les valeurs générées
+	 * @param capteurCreateur : CapteurCreateur à partir duquel on va créer les Memento
 	 */
-	public DiffusionSequentielle(Capteur capteur) {
+	public DiffusionSequentielle(CapteurCreateur capteurCreateur) {
 		this.observateurs = new ArrayList<ObservateurCapteurAsync>();
-		this.capteur = capteur;
+		this.capteurCreateur = capteurCreateur;
 		this.obsCount = 0;
-		this.currentValue = null;
+		this.capteurMemento = null;
 	}
 	
 	/**
@@ -61,9 +64,8 @@ public class DiffusionSequentielle implements AlgoDiffusion{
 		}
 		
 		if(!this.diffusionStarted) {
-			this.diffusionStarted = true;			
-			this.currentValue = this.capteur.getCurrentValue();
-			
+			this.diffusionStarted = true;	
+			this.capteurMemento = capteurCreateur.createMemento();
 			notifyObservers();
 			
 			this.obsCount = 0;
@@ -92,23 +94,28 @@ public class DiffusionSequentielle implements AlgoDiffusion{
 	}
 
 	/**
-	 * Accesseur permettant de récupérer la valeur actuelle de l'algorithme de diffusion
-	 * Incrémente également le compteur obsCount utilisé dans execute
-	 * @return Integer de la valeur actuelle de l'algorithme
-	 */
-	@Override
-	public Integer getValue() {
-		this.obsCount++;
-		return this.currentValue;
-	}
-	
-	/**
 	 * Fonction du pattern Observer permettant de notifier tous les observateurs 
 	 */
 	@Override
 	public void notifyObservers() {
 		for(ObservateurCapteurAsync obs : this.observateurs) {
-			obs.update(capteur);
+			Future<Void> f = obs.update(capteurMemento);
+			// On crée un thread qui va appeler la fonction bloquante get du Future
+			// On va incrémenter notre compteur une fois que le get est terminé
+			Thread t = new Thread() {
+			    public void run() {
+			    	try {
+						f.get();
+				    	obsCount++;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} catch (ExecutionException e) {
+						e.printStackTrace();
+					}
+			    }
+			};
+			t.start();
+			
 		}		
 	}
 

@@ -1,10 +1,12 @@
 package strategy;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import capteur.Capteur;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import memento.CapteurCreateur;
+import memento.CapteurMemento;
 import proxy.ObservateurCapteurAsync;
 
 /**
@@ -20,53 +22,33 @@ public class DiffusionAtomique implements AlgoDiffusion{
 	private List<ObservateurCapteurAsync> observateurs;
 	
 	/**
-	 * Capteur générant les valeurs à récupérer par l'algorithme de diffusion
+	 * CapteurMemento utilisé pour sauvegarder un état du Capteur pendant la diffusion
 	 */
-	private Capteur capteur;
+	private CapteurMemento capteurMemento;
 	
 	/**
-	 * Valeur actuelle de l'algorithme de diffusion
+	 * CapteurCreateur qui va nous permettre de créer et de restaurer des Memento du capteur pendant la diffusion
 	 */
-	private Integer currentValue;
-	
-	/**
-	 * Compteur servant à savoir le nombre d'observateurs ayant récupéré la dernière valeur de l'algorithme de diffusion
-	 */
-	private int obsCount;
-	
-	/**
-	 * Queue contenant toutes les valeurs dernières valeurs récupérées depuis le générateur(Capteur) et non consommées par les observateurs
-	 */
-	private Queue<Integer> queue;
+	private CapteurCreateur capteurCreateur;
 	
 	/**
 	 * Constructeur de DiffusionAtomique initialisant tous ses attributs
-	 * @param capteur : Capteur à partir duquel récupérer les valeurs générées
+	 * @param capteurCreateur : CapteurCreateur à partir duquel on va créer les Memento
 	 */
-	public DiffusionAtomique(Capteur capteur) {
+	public DiffusionAtomique(CapteurCreateur capteurCreateur) {
 		this.observateurs = new ArrayList<ObservateurCapteurAsync>();
-		this.capteur = capteur;
-		this.obsCount = 0;
-		this.currentValue = null;
-		this.queue = new ArrayDeque<>();
+		this.capteurMemento = null;
+		this.capteurCreateur = capteurCreateur;
 	}
 
 	/**
 	 * Fonction de l'interface AlgoDiffusion permettant d'exécuter la stratégie de diffusion
-	 * Vérifie que tous les observateurs ont bien récupéré la dernière valeur avant de changer sa valeur actuelle et de notifier ses observateurs
-	 * Stocke toutes les valeurs du générateur dans une pile
+	 * Vérifie que tous les observateurs ont bien récupéré la dernière valeur avant de notifier ses observateurs
 	 */
 	@Override
 	public void execute() {
-		queue.add(this.capteur.getCurrentValue());
-
-		if(this.obsCount == this.observateurs.size()) {
-			
-			this.currentValue = queue.poll();
-			notifyObservers();
-			
-			this.obsCount = 0;
-		}
+		this.capteurMemento = this.capteurCreateur.createMemento();
+		notifyObservers();
 	}
 	
 	/**
@@ -76,7 +58,6 @@ public class DiffusionAtomique implements AlgoDiffusion{
 	@Override
 	public void attach(ObservateurCapteurAsync observateur) {
 		this.observateurs.add(observateur);
-		this.obsCount = this.observateurs.size();
 	}
 
 	/**
@@ -86,27 +67,21 @@ public class DiffusionAtomique implements AlgoDiffusion{
 	@Override
 	public void detach(ObservateurCapteurAsync observateur) {
 		this.observateurs.remove(observateur);
-		this.obsCount = this.observateurs.size();
 	}
 	
-	/**
-	 * Accesseur permettant de récupérer la valeur actuelle de l'algorithme de diffusion
-	 * Incrémente également le compteur obsCount utilisé dans execute
-	 * @return Integer de la valeur actuelle de l'algorithme
-	 */
-	@Override
-	public Integer getValue() {
-		this.obsCount++;
-		return this.currentValue;
-	}
 
 	/**
-	 * Fonction du pattern Observer permettant de notifier tous les observateurs 
+	 * Fonction du pattern Observer permettant de notifier tous les observateurs
 	 */
 	@Override
 	public void notifyObservers() {
 		for(ObservateurCapteurAsync obs : this.observateurs) {
-			obs.update(capteur);
+			Future<Void> f = obs.update(this.capteurMemento);
+			try {
+				f.get();
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
 		}		
 	}
 	

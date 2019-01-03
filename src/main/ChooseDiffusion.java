@@ -21,6 +21,7 @@ public class ChooseDiffusion {
 		JPanel panel;
 		JButton atomique = new JButton("Diffusion atomique");
 		JButton sequentielle = new JButton("Diffusion séquentielle");
+		JButton causale = new JButton("Diffusion causale");
 		String[] diffusion = new String[1];
 		
 		//Ajouter un listener au clic sur le bouton atomique pour lancer la classe Main avec le bon paramètre
@@ -42,14 +43,26 @@ public class ChooseDiffusion {
 				frame.setVisible(false);
 			}
 		});
+		
+		causale.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				diffusion[0] = "causale";
+				Main.main(diffusion);
+				frame.setVisible(false);
+			}
+			
+		});
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    frame.setPreferredSize(new Dimension(500, 400));
+	    frame.setPreferredSize(new Dimension(800, 400));
 	    frame.setLocation(200, 200);
 	    
 	    frame.setLayout(new GridBagLayout());
 	    panel = new JPanel();
 	    panel.add(atomique);
 	    panel.add(sequentielle);
+	    panel.add(causale);
 	    frame.add(panel);
 	    frame.pack();
 	    frame.setVisible(true);  

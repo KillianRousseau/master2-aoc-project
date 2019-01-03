@@ -34,7 +34,7 @@ public interface ObservateurCapteur{
 	/**
 	 * Accesseur permettant de modifier le Future actuel de l'observateur,
 	 *  notamment si sa valeur a été consommée par le Thread de l'afficheur
-	 * @param future : nouveau Future<Integer>
+	 * @param future : nouveau Future Integer
 	 */
 	public void setFuture(Future<Integer> future);
 }

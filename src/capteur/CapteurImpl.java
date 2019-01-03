@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import memento.CapteurMemento;
 import strategy.AlgoDiffusion;
 
 /**
@@ -66,20 +67,10 @@ public class CapteurImpl extends JFrame implements Capteur{
 	    pack();
 	    setVisible(true);
 	}
-
-	/**
-	 * La fonction getValue permet d'obtenir la valeur actuelle par l'algorithme de diffusion
-	 * @return Un Integer correspondant à la valeur actuelle de l'algorithme
-	 */
-	@Override
-	public Integer getValue() {
-		return this.algoDiffusion.getValue();
-	}
-	
 	
 	/**
 	 * La fonction setAlgoDiffusion permet de définir l'algorithme de diffusion du capteur
-	 * @param Algorithme de diffusion que l'on souhaite utiliser
+	 * @param algoDiffusion : Algorithme de diffusion que l'on souhaite utiliser
 	 */
 	@Override
 	public void setAlgoDiffusion(AlgoDiffusion algoDiffusion) {
@@ -121,5 +112,23 @@ public class CapteurImpl extends JFrame implements Capteur{
 	public void setCurrentValue(int currentValue) {
 		this.currentValue = currentValue;
 		this.label.setText(currentValue+"");
+	}
+
+	/**
+	 * La fonction createMemento permet de créer et retourner un Memento enregistrant la valeur actuelle du Capteur
+	 */
+	@Override
+	public CapteurMemento createMemento() {
+		return new CapteurMemento(this.currentValue);
+	}
+
+	/**
+	 * La fonction restoreMemento permet de mettre à jour la valeur du Capteur avec la valeur contenue dans le Memento
+	 * donné en paramètre
+	 * @param memento : CapteurMemento contenant l'état à donner au Capteur
+	 */
+	@Override
+	public void restoreMemento(CapteurMemento memento) {
+		this.currentValue = memento.getState();
 	}
 }

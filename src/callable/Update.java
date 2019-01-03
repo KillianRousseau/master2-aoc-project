@@ -10,7 +10,7 @@ import proxy.CapteurAsync;
  * @author Killian Rousseau, Emilien Petit
  * @param <V> type de valeur retournée par le Callable update, celui-ci retourne null donc non utilisé
  */
-public class Update<V> implements Callable<Object>{
+public class Update<V> implements Callable<Void>{
 
 	/**
 	 * CapteurAsync (Canal) servant de Subject pour notifier ses observateurs qu'il faut se mettre à jour
@@ -30,7 +30,7 @@ public class Update<V> implements Callable<Object>{
 	 * le notifyObservers du capteurAsync attribut de la classe. Ce notify va update tous les afficheurs lié à un canal
 	 */
 	@Override
-	public Object call() {
+	public Void call() {
 		this.capteurAsync.notifyObservers();
 		return null;
 	}

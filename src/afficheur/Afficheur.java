@@ -86,7 +86,7 @@ public class Afficheur extends JFrame implements ObservateurCapteur{
 	 * @param capteurAsync : non utilisé
 	 */
 	@Override
-	public synchronized void update(CapteurAsync capteur) {
+	public synchronized void update(CapteurAsync capteurAsync) {
 		if(this.canal != null) {
 			this.future = this.canal.getValue();
 		}
@@ -130,7 +130,7 @@ public class Afficheur extends JFrame implements ObservateurCapteur{
 	/**
 	 * Accesseur permettant de modifier le Future actuel de l'afficheur,
 	 * notamment si sa valeur a été consommée par le Thread de l'afficheur
-	 * @param future : nouveau Future<Integer>
+	 * @param future : nouveau Future Integer
 	 */
 	@Override
 	public synchronized void setFuture(Future<Integer> future) {

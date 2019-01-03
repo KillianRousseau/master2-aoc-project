@@ -2,6 +2,7 @@ package proxy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import afficheur.ObservateurCapteur;
 import callable.GetValue;
 import callable.Update;
-import capteur.Capteur;
+import memento.CapteurMemento;
 
 /**
  * La classe Canal occupe le rôle de Proxy dans le pattern Active Object de l'application.
@@ -24,30 +25,19 @@ public class Canal implements CapteurAsync, ObservateurCapteurAsync{
 	private List<ObservateurCapteur> observateurs;
 	
 	/**
-	 * Le Capteur (rôle de Générateur de valeur) lié au Canal
+	 * Le CapteurMemento qui contient l'état du capteur lors de l'update et à récupérer lors du getValue
 	 */
-	private Capteur capteur;
+	private CapteurMemento capteurMemento;
 	
 	/**
 	 * Le Scheduler permettant de gérer les différentes méthodes invoquées par des Callable
 	 */
 	private ScheduledExecutorService scheduler;
 	
-	/**
-	 * Constructeur de Canal affectant à null le capteur et affectant le scheduler à utiliser
+	 /** Constructeur de Canal affectant le capteur et le scheduler à utiliser
 	 * @param scheduler : Scheduler permettant de gérer les différentes méthodes invoquées par des Callable
 	 */
 	public Canal(ScheduledExecutorService scheduler) {
-		this(null,scheduler);
-	}
-
-	/**
-	 * Constructeur de Canal affectant le capteur et le scheduler à utiliser
-	 * @param capteur : Le Capteur (rôle de Générateur de valeur) lié au Canal
-	 * @param scheduler : Scheduler permettant de gérer les différentes méthodes invoquées par des Callable
-	 */
-	public Canal(Capteur capteur, ScheduledExecutorService scheduler) {
-		this.capteur = capteur;
 		this.observateurs = new ArrayList<ObservateurCapteur>();
 		this.scheduler = scheduler;
 	}
@@ -56,13 +46,14 @@ public class Canal implements CapteurAsync, ObservateurCapteurAsync{
 	 * Fonction permettant de réaliser l'action Update du pattern Active Object en créant un Callable 
 	 * et en retournant le Future créé par un scheduler.
 	 * Un random est utilisé dans le schedule pour simuler des durées différentes à l'exécution des actions
-	 * @param capteur : Capteur ayant appelé le Update (Client du Active Object)
+	 * @param capteurMemento : CapteurMemento contenant l'état du capteur lors de l'update
 	 * @return un Future créé par un scheduler
 	 */
 	@Override
-	public Future<Object> update(Capteur capteur) {
-		Update<Integer> update = new Update<Integer>(this);
-		return scheduler.schedule(update, (long)(Math.random()*600L+100L), TimeUnit.MILLISECONDS);
+	public Future<Void> update(CapteurMemento capteurMemento) {
+		this.capteurMemento = capteurMemento;
+		Callable<Void> update = new Update<Void>(this);
+		return scheduler.schedule(update, (long)(Math.random()*600L+400L), TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -73,9 +64,8 @@ public class Canal implements CapteurAsync, ObservateurCapteurAsync{
 	 */
 	@Override
 	public Future<Integer> getValue() {
-		GetValue<Integer> getValue = new GetValue<Integer>(this.capteur);
-		
-		return scheduler.schedule(getValue, (long)(Math.random()*600L+100L), TimeUnit.MILLISECONDS);
+		Callable<Integer> getValue = new GetValue<Integer>(this.capteurMemento);
+		return scheduler.schedule(getValue, (long)(Math.random()*600L+400L), TimeUnit.MILLISECONDS);
 	}
 	
 	/**
@@ -105,14 +95,4 @@ public class Canal implements CapteurAsync, ObservateurCapteurAsync{
 			obsCapteur.update(this);
 		}
 	}
-
-
-	/**
-	 * Accesseur permettant de modifier le Capteur(Générateur) lié au Canal
-	 * @param capteur : Nouveau capteur à lier au Canal
-	 */
-	public void setCapteur(Capteur capteur) {
-		this.capteur = capteur;
-	}
-
 }

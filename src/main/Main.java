@@ -11,6 +11,7 @@ import capteur.CapteurImpl;
 import proxy.Canal;
 import strategy.AlgoDiffusion;
 import strategy.DiffusionAtomique;
+import strategy.DiffusionCausale;
 import strategy.DiffusionSequentielle;
 
 /**
@@ -22,7 +23,7 @@ public class Main {
 
 	/**
 	 * Récupère en paramètre un String indiquant l'algorithme de diffusion à utiliser
-	 * @param args
+	 * @param args : args[0] contient la diffusion à lancer
 	 */
 	public static void main(String[] args) {
 
@@ -35,8 +36,11 @@ public class Main {
 			if(args[0].equals("atomique")) {
 				diffusion = new DiffusionAtomique(capteur);
 			}
-			else {
+			else if(args[0].equals("sequentielle")){
 				diffusion = new DiffusionSequentielle(capteur);
+			}
+			else {
+				diffusion = new DiffusionCausale(capteur);
 			}
 		}
 		
@@ -60,12 +64,6 @@ public class Main {
 		AfficheurThread affThread2 = new AfficheurThread(o2);
 		AfficheurThread affThread3 = new AfficheurThread(o3);
 		AfficheurThread affThread4 = new AfficheurThread(o4);
-
-		// On donne notre capteur (générateur) à chaque canal
-		c1.setCapteur(capteur);
-		c2.setCapteur(capteur);
-		c3.setCapteur(capteur);
-		c4.setCapteur(capteur);
 		
 		// On attache chaque afficheur à son canal en tant qu'observateur
 		c1.attach(o1);

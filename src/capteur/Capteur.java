@@ -1,24 +1,20 @@
 package capteur;
 
+import memento.CapteurCreateur;
 import strategy.AlgoDiffusion;
 
 /**
  * L'interface Capteur occupe le rôle de générateur dans l'application.
  * Étend l'interface Runnable pour que le Capteur soit un Thread.
+ * Étend égalemnt l'interface CapteurCreateur pour pouvoir gérer des Mementos du Capteur
  * @author Killian Rousseau, Emilien Petit
  *
  */
-public interface Capteur extends Runnable{
+public interface Capteur extends Runnable, CapteurCreateur{
 
 	/**
-	 * La fonction getValue permet d'obtenir la valeur actuelle par l'algorithme de diffusion
-	 * @return Un Integer correspondant à la valeur actuelle de l'algorithme
-	 */
-	public Integer getValue();
-	
-	/**
 	 * La fonction setAlgoDiffusion permet de définir l'algorithme de diffusion du capteur
-	 * @param Algorithme de diffusion que l'on souhaite utiliser
+	 * @param diffusion : Algorithme de diffusion que l'on souhaite utiliser
 	 */
 	public void setAlgoDiffusion(AlgoDiffusion diffusion);
 	

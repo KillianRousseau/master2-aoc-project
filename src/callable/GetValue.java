@@ -2,7 +2,7 @@ package callable;
 
 import java.util.concurrent.Callable;
 
-import capteur.Capteur;
+import memento.CapteurMemento;
 
 /**
  * GetValue implémente l'interface Callable pour réaliser l'action getValue et retourner une valeur entière.
@@ -13,25 +13,24 @@ import capteur.Capteur;
 public class GetValue<V> implements Callable<Integer>{
 
 	/**
-	 * Capteur à partir duquel récupérer la valeur
+	 * CapteurMemento à partir duquel récupérer la valeur
 	 */
-	private Capteur capteur;
+	private CapteurMemento capteurMemento;
 	
 	/**
 	 * Constructeur du Callable GetValue
-	 * @param capteur : Capteur(Générateur) lié au GetValue 
+	 * @param capteurMemento : CapteurMemento contenant l'état du capteur à récupérer
 	 */
-	public GetValue(Capteur capteur) {
-		this.capteur = capteur;
+	public GetValue(CapteurMemento capteurMemento) {
+		this.capteurMemento = capteurMemento;
 	}
 
 	/**
-	 * Fonction de l'interface Callable permettant de réaliser l'action getValue depuis le capteur attribut de la classe
+	 * Fonction de l'interface Callable permettant de réaliser l'action getValue depuis le capteurMemento attribut de la classe
 	 */
 	@Override
 	public Integer call() {
-		Integer val = this.capteur.getValue();
-		return val;
+		return this.capteurMemento.getState();
 	}
 
 }

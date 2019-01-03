@@ -31,9 +31,4 @@ public interface AlgoDiffusion {
 	 */
 	public void notifyObservers();
 	
-	/**
-	 * Accesseur permettant de récupérer la valeur actuelle de l'algorithme de diffusion
-	 * @return Integer de la valeur actuelle de l'algorithme
-	 */
-	public Integer getValue();
 }

@@ -8,5 +8,4 @@ package memento;
 public interface CapteurCreateur {
 
 	public CapteurMemento createMemento();
-	public void restoreMemento(CapteurMemento memento);
 }

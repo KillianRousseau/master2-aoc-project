@@ -122,13 +122,4 @@ public class CapteurImpl extends JFrame implements Capteur{
 		return new CapteurMemento(this.currentValue);
 	}
 
-	/**
-	 * La fonction restoreMemento permet de mettre à jour la valeur du Capteur avec la valeur contenue dans le Memento
-	 * donné en paramètre
-	 * @param memento : CapteurMemento contenant l'état à donner au Capteur
-	 */
-	@Override
-	public void restoreMemento(CapteurMemento memento) {
-		this.currentValue = memento.getState();
-	}
 }
